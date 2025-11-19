@@ -1,0 +1,230 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - prod
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true # Cancel previous runs for the same branch
+
+# Exclude placeholder packages from CI (remove when ready to enable)
+env:
+  TURBO_IGNORE: --filter="!@grasp/mobile" --filter="!@grasp/extension"
+
+jobs:
+  # Stage 1: Fast checks (run in parallel)
+  format:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for turbo to detect changes
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check Prettier formatting
+        run: pnpm format:check
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for turbo
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run ESLint (monorepo-optimized)
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PRs: check only changed packages since base branch
+            echo "Running lint on changed packages (PR mode)..."
+            pnpm turbo run lint --filter="...[origin/${{ github.base_ref }}]" ${{ env.TURBO_IGNORE }}
+          else
+            # For pushes: check only changed packages since previous commit
+            echo "Running lint on changed packages (push mode)..."
+            pnpm turbo run lint --filter="...[HEAD^1]" ${{ env.TURBO_IGNORE }}
+          fi
+
+  # Stage 2: Slower checks (run in parallel, wait for stage 1)
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    needs: [format, lint] # Wait for fast checks to pass
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run TypeScript type check (monorepo-optimized)
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "Type checking changed packages (PR mode)..."
+            pnpm turbo run type-check --filter="...[origin/${{ github.base_ref }}]" ${{ env.TURBO_IGNORE }}
+          else
+            echo "Type checking changed packages (push mode)..."
+            pnpm turbo run type-check --filter="...[HEAD^1]" ${{ env.TURBO_IGNORE }}
+          fi
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [format, lint] # Wait for fast checks to pass
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build changed packages (monorepo-optimized)
+        env:
+          # Dummy Supabase credentials for build-time validation
+          NEXT_PUBLIC_SUPABASE_URL: https://dummy-project.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key-for-ci-builds-only
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "Building changed packages (PR mode)..."
+            pnpm turbo run build --filter="...[origin/${{ github.base_ref }}]" ${{ env.TURBO_IGNORE }}
+          else
+            echo "Building changed packages (push mode)..."
+            pnpm turbo run build --filter="...[HEAD^1]" ${{ env.TURBO_IGNORE }}
+          fi
+
+  # Placeholder for tests - uncomment and configure when you add tests
+  # test:
+  #   name: Test
+  #   runs-on: ubuntu-latest
+  #   needs: [format, lint] # Wait for fast checks
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v2
+  #       with:
+  #         version: 8.15.0
+  #
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '18'
+  #         cache: 'pnpm'
+  #
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Run tests (monorepo-optimized)
+  #       run: |
+  #         if [ "${{ github.event_name }}" == "pull_request" ]; then
+  #           pnpm turbo run test --filter="...[origin/${{ github.base_ref }}]"
+  #         else
+  #           pnpm turbo run test --filter="...[HEAD^1]"
+  #         fi
+
+  summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [format, lint, type-check, build]
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          echo "=== CI Summary ==="
+          echo ""
+          echo "Stage 1 (Fast):"
+          echo "  Format: ${{ needs.format.result }}"
+          echo "  Lint: ${{ needs.lint.result }}"
+          echo ""
+          echo "Stage 2 (Slow):"
+          echo "  Type Check: ${{ needs.type-check.result }}"
+          echo "  Build: ${{ needs.build.result }}"
+          echo ""
+
+          # Check Stage 1
+          if [ "${{ needs.format.result }}" != "success" ]; then
+            echo "❌ Format check failed - run 'pnpm format' locally and commit"
+            exit 1
+          fi
+
+          if [ "${{ needs.lint.result }}" != "success" ]; then
+            echo "❌ Linting failed - run 'pnpm lint:fix' locally"
+            exit 1
+          fi
+
+          # Check Stage 2
+          if [ "${{ needs.type-check.result }}" != "success" ]; then
+            echo "❌ Type checking failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "❌ Build failed"
+            exit 1
+          fi
+
+          echo "✅ All CI checks passed!"
+          echo ""
+          echo "ℹ️  Checks ran only on changed packages (monorepo-optimized)"

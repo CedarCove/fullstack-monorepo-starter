@@ -1,0 +1,90 @@
+{
+  "name": "fullstack-monorepo-starter",
+  "version": "1.0.0",
+  "description": "Production-ready TypeScript monorepo template with Next.js, Expo, Chrome Extension, Supabase, tRPC, and Drizzle ORM",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "build:web": "turbo run build --filter=@repo/web",
+    "build:mobile": "turbo run build --filter=@repo/mobile",
+    "build:extension": "turbo run build --filter=@repo/extension",
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@repo/web",
+    "dev:mobile": "turbo run dev --filter=@repo/mobile",
+    "dev:extension": "turbo run dev --filter=@repo/extension",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "test:unit": "turbo run test:unit",
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky",
+    "setup": "node scripts/setup-project.js",
+    "remove:mobile": "node scripts/remove-app.js mobile",
+    "remove:extension": "node scripts/remove-app.js extension",
+    "validate": "node scripts/validate-setup.js",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "db:generate": "cd packages/database && drizzle-kit generate",
+    "db:push": "cd packages/database && drizzle-kit push",
+    "db:studio": "cd packages/database && drizzle-kit studio",
+    "db:seed": "node scripts/seed-database.js"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-native": "^5.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.2.5",
+    "supabase": "^1.200.3",
+    "turbo": "^1.12.4",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.46.3"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "monorepo",
+    "typescript",
+    "turborepo",
+    "nextjs",
+    "expo",
+    "react-native",
+    "chrome-extension",
+    "supabase",
+    "trpc",
+    "drizzle-orm",
+    "template",
+    "starter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pycatcedar/fullstack-monorepo-starter.git"
+  }
+}

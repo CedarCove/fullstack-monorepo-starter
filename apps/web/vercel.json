@@ -1,0 +1,9 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "main": false,
+      "prod": false
+    }
+  },
+  "ignoreCommand": "bash vercel-ignore-build-step.sh"
+}
