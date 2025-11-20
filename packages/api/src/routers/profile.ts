@@ -43,6 +43,7 @@ export const profileRouter = router({
       z.object({
         username: z.string().min(3).max(50).optional(),
         fullName: z.string().max(100).optional().nullable(),
+        bio: z.string().max(500).optional().nullable(),
         avatarUrl: z.string().url().optional().nullable(),
       })
     )

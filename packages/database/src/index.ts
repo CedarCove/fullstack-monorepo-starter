@@ -5,5 +5,28 @@ export * from './schema';
 export * from './client';
 
 // Export Drizzle ORM utilities
-export { eq, and, or, sql, desc, asc } from 'drizzle-orm';
+export {
+  eq,
+  and,
+  or,
+  not,
+  sql,
+  desc,
+  asc,
+  like,
+  ilike,
+  inArray,
+  notInArray,
+  isNull,
+  isNotNull,
+  exists,
+  notExists,
+  between,
+  notBetween,
+  gt,
+  gte,
+  lt,
+  lte,
+  ne,
+} from 'drizzle-orm';
 export type { SQL } from 'drizzle-orm';
