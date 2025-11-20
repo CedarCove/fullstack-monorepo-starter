@@ -14,7 +14,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci skip')"
+    # Skip workflow on template repository and if commit message contains 'ci skip'
+    if: "!contains(github.event.head_commit.message, 'ci skip') && github.repository != 'pycatcedar/fullstack-monorepo-starter'"
 
     steps:
       - name: Checkout code

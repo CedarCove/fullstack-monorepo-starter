@@ -1,4 +1,4 @@
-import { createBrowserClient } from '@grasp/database/client';
+import { createBrowserClient } from '@repo/database/client';
 
 // For Chrome extensions, we need to store env vars differently
 // You can use chrome.storage or hardcode during build

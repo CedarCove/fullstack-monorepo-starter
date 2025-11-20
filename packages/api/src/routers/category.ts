@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { categories, posts, postCategories, eq, and, sql } from '@grasp/database';
+import { categories, posts, postCategories, eq, and, sql } from '@repo/database';
 
 /**
  * Category router

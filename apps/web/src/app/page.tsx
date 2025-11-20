@@ -206,7 +206,7 @@ export default function Home() {
           <li>Drizzle ORM handles all database queries (type-safe SQL)</li>
           <li>tRPC procedures include business logic and computed fields</li>
           <li>TanStack Query handles automatic caching and refetching</li>
-          <li>Shared types across the monorepo via @grasp/database and @grasp/api</li>
+          <li>Shared types across the monorepo via @repo/database and @repo/api</li>
           <li>No direct database queries needed - tRPC + Drizzle handles everything</li>
         </ul>
       </div>

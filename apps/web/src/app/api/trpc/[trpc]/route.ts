@@ -1,9 +1,9 @@
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
-import { appRouter } from '@grasp/api';
-import { createContext } from '@grasp/api/context';
-import { getServerDrizzleClient } from '@grasp/database/client/server';
+import { appRouter } from '@repo/api';
+import { createContext } from '@repo/api/context';
+import { getServerDrizzleClient } from '@repo/database/client/server';
 
 /**
  * tRPC API handler for Next.js App Router

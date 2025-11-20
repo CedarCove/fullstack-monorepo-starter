@@ -1,5 +1,5 @@
 {
-  "name": "@grasp/extension",
+  "name": "@repo/extension",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,8 +11,8 @@
     "clean": "rm -rf build .turbo node_modules"
   },
   "dependencies": {
-    "@grasp/api": "workspace:*",
-    "@grasp/database": "workspace:*",
+    "@repo/api": "workspace:*",
+    "@repo/database": "workspace:*",
     "@tanstack/react-query": "^5.25.0",
     "@trpc/client": "^11.0.0",
     "@trpc/react-query": "^11.0.0",

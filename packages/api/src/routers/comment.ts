@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { comments, profiles, posts, eq, and, desc, sql, isNull } from '@grasp/database';
-import type { CommentWithDetails } from '@grasp/database';
+import { comments, profiles, posts, eq, and, desc, sql, isNull } from '@repo/database';
+import type { CommentWithDetails } from '@repo/database';
 
 /**
  * Comment router

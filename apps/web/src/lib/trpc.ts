@@ -1,5 +1,5 @@
 import { createTRPCReact } from '@trpc/react-query';
-import type { AppRouter } from '@grasp/api';
+import type { AppRouter } from '@repo/api';
 
 /**
  * Type-safe tRPC React hooks

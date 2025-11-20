@@ -1,5 +1,5 @@
 import type { SupabaseClient as SupabaseClientBase } from '@supabase/supabase-js';
-import type { DrizzleDB } from '@grasp/database';
+import type { DrizzleDB } from '@repo/database';
 
 /**
  * Context that will be available in all tRPC procedures

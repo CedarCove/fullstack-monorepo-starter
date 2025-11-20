@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router, protectedProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { profiles, eq } from '@grasp/database';
+import { profiles, eq } from '@repo/database';
 
 /**
  * Profile router using Drizzle ORM

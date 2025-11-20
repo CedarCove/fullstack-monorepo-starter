@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { router, protectedProcedure, publicProcedure } from '../trpc';
 import { TRPCError } from '@trpc/server';
-import { todos, eq, desc, and, sql } from '@grasp/database';
-import type { TodoWithMetadata } from '@grasp/database';
+import { todos, eq, desc, and, sql } from '@repo/database';
+import type { TodoWithMetadata } from '@repo/database';
 
 /**
  * Todo router with complex business logic

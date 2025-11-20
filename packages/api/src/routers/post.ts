@@ -15,8 +15,8 @@ import {
   like,
   or,
   inArray,
-} from '@grasp/database';
-import type { PostWithDetails } from '@grasp/database';
+} from '@repo/database';
+import type { PostWithDetails } from '@repo/database';
 
 /**
  * Post router demonstrating complex relationships and queries

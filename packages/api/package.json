@@ -1,5 +1,5 @@
 {
-  "name": "@grasp/api",
+  "name": "@repo/api",
   "version": "0.0.0",
   "private": true,
   "main": "./src/index.ts",
@@ -16,7 +16,7 @@
     "clean": "rm -rf .turbo node_modules"
   },
   "dependencies": {
-    "@grasp/database": "workspace:*",
+    "@repo/database": "workspace:*",
     "@supabase/supabase-js": "^2.39.7",
     "@trpc/server": "^11.0.0",
     "superjson": "^2.2.1",

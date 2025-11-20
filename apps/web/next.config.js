@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@grasp/api', '@grasp/database'],
+  transpilePackages: ['@repo/api', '@repo/database'],
   experimental: {
     typedRoutes: true,
   },

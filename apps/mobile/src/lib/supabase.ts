@@ -1,4 +1,4 @@
-import { createBrowserClient } from '@grasp/database/client';
+import { createBrowserClient } from '@repo/database/client';
 
 /**
  * Get the Supabase client for React Native usage
